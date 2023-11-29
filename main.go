@@ -8,10 +8,14 @@ import (
 	"strings"
 )
 
+func sendInput() {
+
+}
+
 func main() {
 	cmd := exec.Command("./a.out")
 	stdin, e := cmd.StdinPipe()
-
+	sendInput()
 	if e != nil {
 		log.Fatal(e)
 	}
@@ -39,6 +43,7 @@ func main() {
 	if e != nil {
 		log.Fatal(e)
 	}
+
 	_, e = stdin.Write([]byte("SHOW\n"))
 	stdin.Close()
 
