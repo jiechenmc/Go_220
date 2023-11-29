@@ -8,14 +8,17 @@ import (
 	"strings"
 )
 
-func sendInput() {
-
+func sendInput(stdin io.WriteCloser, str string) {
+	_, e := stdin.Write([]byte(str))
+	if e != nil {
+		log.Fatal(e)
+	}
 }
 
 func main() {
 	cmd := exec.Command("./a.out")
 	stdin, e := cmd.StdinPipe()
-	sendInput()
+
 	if e != nil {
 		log.Fatal(e)
 	}
@@ -28,23 +31,12 @@ func main() {
 	if e := cmd.Start(); e != nil {
 		log.Fatal(e)
 	}
-	_, e = stdin.Write([]byte("ADD\n"))
-	if e != nil {
-		log.Fatal(e)
-	}
 
-	_, e = stdin.Write([]byte("ADD\n"))
-	if e != nil {
-		log.Fatal(e)
-	}
+	sendInput(stdin, "ADD\n")
+	sendInput(stdin, "SHOW\n")
+	sendInput(stdin, "ADD\n")
+	sendInput(stdin, "SHOW\n")
 
-	_, e = stdin.Write([]byte("SHOW\n"))
-	_, e = stdin.Write([]byte("ADD\n"))
-	if e != nil {
-		log.Fatal(e)
-	}
-
-	_, e = stdin.Write([]byte("SHOW\n"))
 	stdin.Close()
 
 	out, _ := io.ReadAll(stdout)
